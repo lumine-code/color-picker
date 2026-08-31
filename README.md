@@ -1,26 +1,24 @@
-# A Color Picker for Atom
+# color-picker
 
-[![apm](https://img.shields.io/apm/v/color-picker.svg?style=flat-square)]() [![apm](https://img.shields.io/apm/dm/color-picker.svg?style=flat-square)]()
+Pick and edit colors in the editor.
 
-Right click and select `Color Picker`, or hit `CMD-SHIFT-C`/`CTRL-ALT-C` to open it. Currently reads `HEX`, `HEXa`, `RGB`, `RGBa`, `HSL`, `HSLa`, `HSV`, `HSVa`, `VEC3` and `VEC4` colors – and is able to convert between the formats.
+## Usage
 
-It also inspects `Sass` and `LESS` color variables. Just open the `Color Picker` with the cursor at a variable and it'll look up the definition for you. From there, you can click the definition and go directly to where it's defined.
+Place the cursor inside a color, select a color expression, or choose an insertion point, then press <kbd>Alt+Shift+C</kbd>. The picker does not change the buffer until you choose **Apply** or press <kbd>Enter</kbd>; choose **Cancel**, press <kbd>Escape</kbd>, invoke the command again, or click outside the picker to discard the session.
 
-## Preview
+The **Color Picker** item is also available directly under **Packages** and in the context menu of a regular text editor.
 
-![Color Picker in action](https://github.com/thomaslindstrom/color-picker/raw/master/preview.gif)
+## Formats
+
+The picker reads CSS named colors, three-, four-, six-, and eight-digit hexadecimal notation, RGB(A), HSL(A), HSV(A), and `vec3`/`vec4`. It can write HEX, RGB, HSL, HSV, or VEC without resolving variables or compound expressions.
 
 ## Settings
 
-Open `Atom Settings`, go to `Packages` in the left hand sidebar, and press `Settings` on `color-picker` to open the list of settings available for the Color Picker.
+- **Preferred Format** chooses the format for newly inserted colors.
+- **Uppercase HEX** writes hexadecimal digits in uppercase.
+- **Abbreviate Values** shortens hexadecimal output when every component can be represented by one digit.
+- **Always Include Alpha** writes an alpha component for opaque colors too.
 
-- **Abbreviate Color Values:** If possible, abbreviate color values, like for example “0.3” to “.3”,  “#ffffff” to “#fff” and “rgb(0, 0, 0)” to “rgb(0,0,0)”.
-- **Automatically Replace Color:** Replace selected color automatically on change. Works well with as-you-type CSS reloaders.
-- **Preferred Color Format:** On open, the Color Picker will show a color in this format.
-- **Serve a random color on open:** If the Color Picker doesn't get an input color, it serves a completely random color.
-- **Trigger key:** Decide what trigger key should open the Color Picker. `CMD-SHIFT-{TRIGGER_KEY}` and `CTRL-ALT-{TRIGGER_KEY}`. Requires a restart.
-- **Uppercase Color Values:** If sensible, uppercase the color value. For example, “#aaa” becomes “#AAA”.
+## License
 
-## To do
-
-- Selectable list of the current project color variables
+[MIT](LICENSE.md)

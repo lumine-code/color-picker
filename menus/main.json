@@ -1,0 +1,13 @@
+{
+  "menu": [
+    {
+      "label": "Packages",
+      "submenu": [
+        {
+          "label": "Color Picker",
+          "command": "color-picker:toggle-focus"
+        }
+      ]
+    }
+  ]
+}

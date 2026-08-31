@@ -1,32 +1,97 @@
 {
   "name": "color-picker",
-  "main": "./lib/ColorPicker",
-  "version": "2.3.0",
-  "private": true,
-  "description": "Right click or press CMD-SHIFT-C/CTRL-ALT-C to open it.",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/thomaslindstrom/color-picker"
-  },
+  "author": "lumine-code",
+  "version": "1.0.0",
+  "description": "Pick and edit colors in the editor.",
   "keywords": [
-    "colors",
-    "design",
-    "ui"
+    "swatch",
+    "palette",
+    "hex",
+    "rgb",
+    "hsl",
+    "hsv",
+    "vec"
   ],
-  "license": "MIT",
-  "engines": {
-    "atom": ">=1.2.4"
-  },
-  "readmeFilename": "README.md",
+  "repository": "https://github.com/lumine-code/color-picker",
   "bugs": {
-    "url": "https://github.com/thomaslindstrom/color-picker/issues"
+    "url": "https://github.com/lumine-code/color-picker/issues"
   },
-  "homepage": "https://github.com/thomaslindstrom/color-picker",
-  "providedServices": {
-    "color-picker": {
-      "versions": {
-        "1.0.0": "provideColorPicker"
-      }
+  "homepage": "https://github.com/lumine-code/color-picker#readme",
+  "license": "MIT",
+  "main": "./lib/main",
+  "files": [
+    "keymaps",
+    "lib",
+    "menus",
+    "spec",
+    "styles"
+  ],
+  "engines": {
+    "lumine": "^1.0.0"
+  },
+  "backgroundTips": [
+    "You can edit a color at the cursor or insert a new one with {{ 'color-picker:toggle-focus' | keystroke }}"
+  ],
+  "scripts": {
+    "test": "lumine --test spec",
+    "lint": "eslint . --max-warnings 0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "configSchema": {
+    "preferredFormat": {
+      "title": "Preferred Format",
+      "description": "Format used when inserting a new color.",
+      "type": "string",
+      "enum": [
+        {
+          "value": "hex",
+          "description": "HEX"
+        },
+        {
+          "value": "rgb",
+          "description": "RGB"
+        },
+        {
+          "value": "hsl",
+          "description": "HSL"
+        },
+        {
+          "value": "hsv",
+          "description": "HSV"
+        },
+        {
+          "value": "vec",
+          "description": "VEC"
+        }
+      ],
+      "default": "hex"
+    },
+    "uppercaseHex": {
+      "title": "Uppercase HEX",
+      "description": "Write hexadecimal digits in uppercase.",
+      "type": "boolean",
+      "default": false
+    },
+    "abbreviateValues": {
+      "title": "Abbreviate Values",
+      "description": "Shorten hexadecimal colors to three or four digits when possible.",
+      "type": "boolean",
+      "default": false
+    },
+    "alwaysIncludeAlpha": {
+      "title": "Always Include Alpha",
+      "description": "Include an alpha component even when the color is fully opaque.",
+      "type": "boolean",
+      "default": false
     }
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.9.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-n": "^18.3.0",
+    "globals": "^17.11.0",
+    "prettier": "^3.9.6"
   }
 }
