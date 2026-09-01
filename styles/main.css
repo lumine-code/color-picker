@@ -40,7 +40,7 @@ lumine-overlay.color-picker-overlay {
 
 .color-picker-saturation-value:focus-visible,
 .color-picker input:focus-visible,
-.color-picker select:focus-visible,
+.color-picker .select-box:focus-visible,
 .color-picker button:focus-visible {
   outline: 2px solid var(--accent-color);
   outline-offset: 1px;

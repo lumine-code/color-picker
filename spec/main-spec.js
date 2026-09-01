@@ -51,7 +51,7 @@ describe("color-picker", () => {
     expect(picker).not.toBeNull();
     expect(picker.getAttribute("role")).toBe("dialog");
     expect(picker.hasAttribute("data-context-menu-boundary")).toBe(true);
-    expect(picker.querySelector(".color-picker-format").value).toBe("rgb");
+    expect(mainModule.activeSession.picker.formatSelect.value).toBe("rgb");
     expect(picker.querySelector(".color-picker-text").value).toBe("rgba(10, 20, 30, 0.5)");
     expect(editor.getText()).toBe("color: rgba(10, 20, 30, .5);");
   });
@@ -59,7 +59,7 @@ describe("color-picker", () => {
   it("uses the detected format instead of the insertion preference", () => {
     lumine.config.set("color-picker.preferredFormat", "vec");
     const picker = openAt("color: hsl(120, 100%, 50%);", [0, 18]);
-    expect(picker.querySelector(".color-picker-format").value).toBe("hsl");
+    expect(mainModule.activeSession.picker.formatSelect.value).toBe("hsl");
     expect(picker.querySelector(".color-picker-text").value).toBe("hsl(120, 100%, 50%)");
   });
 
@@ -186,7 +186,7 @@ describe("color-picker", () => {
     ]);
     dispatch();
     expect(mainModule.activeSession.originalText).toBe("hsl(240, 100%, 50%)");
-    expect(pickerElement(editor).querySelector(".color-picker-format").value).toBe("hsl");
+    expect(mainModule.activeSession.picker.formatSelect.value).toBe("hsl");
   });
 
   it("closes when the editor buffer changes externally", () => {
