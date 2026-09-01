@@ -5,7 +5,12 @@
       "submenu": [
         {
           "label": "Color Picker",
-          "command": "color-picker:toggle-focus"
+          "submenu": [
+            {
+              "label": "Toggle Focus",
+              "command": "color-picker:toggle-focus"
+            }
+          ]
         }
       ]
     }
