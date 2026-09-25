@@ -29,9 +29,6 @@
   "engines": {
     "lumine": "^1.0.0"
   },
-  "backgroundTips": [
-    "You can edit a color at the cursor or insert a new one with {{ 'color-picker:toggle-focus' | keystroke }}"
-  ],
   "scripts": {
     "test": "lumine --test spec",
     "lint": "eslint . --max-warnings 0",
@@ -84,6 +81,13 @@
       "description": "Include an alpha component even when the color is fully opaque.",
       "type": "boolean",
       "default": false
+    }
+  },
+  "providedServices": {
+    "background-tips.provider": {
+      "versions": {
+        "1.0.0": "provideBackgroundTips"
+      }
     }
   },
   "devDependencies": {
