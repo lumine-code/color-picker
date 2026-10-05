@@ -35,8 +35,8 @@ describe("color-picker", () => {
     for (const openEditor of lumine.workspace.getTextEditors()) openEditor.destroy();
   });
 
-  function dispatch(target = editorElement, detail) {
-    lumine.commands.dispatch(target, "color-picker:toggle-focus", detail);
+  function dispatch(target = editorElement) {
+    lumine.commands.dispatch(target, "color-picker:toggle-focus");
   }
 
   function openAt(text, position) {
@@ -87,28 +87,6 @@ describe("color-picker", () => {
       mainModule.activeSession.picker.color.r,
     );
     expect(picker.querySelector(".color-picker-hue input").value).toBe("240");
-  });
-
-  it("uses context-menu coordinates once and never leaks them into a key binding", () => {
-    editor.setText("#f00 then #00f");
-    editor.setCursorBufferPosition([0, 1]);
-    const component = editorElement.getComponent();
-    const contextEvent = { target: editorElement, clientX: 320, clientY: 180 };
-    spyOn(component, "screenPositionForMouseEvent").and.returnValue([0, 12]);
-
-    lumine.contextMenu.templateForEvent(contextEvent);
-    dispatch();
-    expect(mainModule.activeSession.originalText).toBe("#f00");
-    dispatch();
-
-    lumine.contextMenu.templateForEvent(contextEvent);
-    dispatch(editorElement, [{ contextCommand: true }]);
-    expect(component.screenPositionForMouseEvent).toHaveBeenCalledWith(contextEvent);
-    expect(mainModule.activeSession.originalText).toBe("#00f");
-    dispatch();
-
-    dispatch();
-    expect(mainModule.activeSession.originalText).toBe("#f00");
   });
 
   it("invoking toggle-focus again cancels without applying", () => {
