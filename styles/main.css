@@ -32,7 +32,7 @@ lumine-overlay.color-picker-overlay {
   overflow: hidden;
   cursor: crosshair;
   border: 1px solid var(--base-border-color);
-  border-radius: var(--component-border-radius);
+  border-radius: var(--ui-border-radius);
   background:
     linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent),
     var(--color-picker-hue);
@@ -42,7 +42,7 @@ lumine-overlay.color-picker-overlay {
 .color-picker input:focus-visible,
 .color-picker .select-box:focus-visible,
 .color-picker button:focus-visible {
-  outline: 2px solid var(--accent-color);
+  outline: 2px solid var(--accent-indicator-color);
   outline-offset: 1px;
 }
 
@@ -90,7 +90,7 @@ lumine-overlay.color-picker-overlay {
 }
 
 .color-picker-alpha input {
-  accent-color: var(--accent-color);
+  accent-color: var(--accent-indicator-color);
 }
 
 .color-picker-hue input::-webkit-slider-runnable-track,
@@ -115,7 +115,7 @@ lumine-overlay.color-picker-overlay {
 }
 
 .color-picker-alpha input::-webkit-slider-thumb {
-  background-color: var(--accent-color);
+  background-color: var(--accent-indicator-color);
 }
 
 .color-picker-hue input::-webkit-slider-runnable-track {
@@ -135,7 +135,7 @@ lumine-overlay.color-picker-overlay {
   overflow: hidden;
   margin-top: auto;
   border: 1px solid var(--base-border-color);
-  border-radius: var(--component-border-radius);
+  border-radius: var(--ui-border-radius);
   background: repeating-conic-gradient(#777 0 25%, #aaa 0 50%) 0 / 10px 10px;
 }
 
