@@ -2,6 +2,8 @@
 
 Pick and edit colors in the editor.
 
+Fork of [thomaslindstrom/color-picker](https://github.com/thomaslindstrom/color-picker).
+
 Place the cursor inside a color, select a color expression, or choose an insertion point, then run the Color Picker command.
 
 ## Features
