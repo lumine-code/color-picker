@@ -122,6 +122,37 @@ describe("color-picker", () => {
     expect(overlayDecorations(editor).length).toBe(0);
   });
 
+  it("keeps overflow hue input invalid and leaves the editor untouched until corrected", () => {
+    const original = "color: #123456;";
+    const picker = openAt(original, [0, 10]);
+    const input = picker.querySelector(".color-picker-text");
+    const apply = picker.querySelector(".btn-primary");
+    input.value = `hsl(${"9".repeat(400)}, 100%, 50%)`;
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    expect(input.getAttribute("aria-invalid")).toBe("true");
+    expect(apply.disabled).toBe(true);
+    apply.click();
+    expect(editor.getText()).toBe(original);
+    expect(overlayDecorations(editor).length).toBe(1);
+    input.value = "hsl(-240deg, 100%, 50%)";
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    expect(apply.disabled).toBe(false);
+    apply.click();
+    expect(editor.getText()).toBe("color: hsl(120, 100%, 50%);");
+    editor.undo();
+    expect(editor.getText()).toBe(original);
+  });
+
+  it("opens insertion mode at an overflow literal without selecting it as a valid color", () => {
+    const original = `color: hsl(${"9".repeat(400)}, 100%, 50%);`;
+    const picker = openAt(original, [0, 12]);
+    expect(mainModule.activeSession.insertion).toBe(true);
+    expect(mainModule.activeSession.originalText).toBe("");
+    expect(picker.querySelector(".color-picker-text").value).toBe("#ff0000");
+    dispatch();
+    expect(editor.getText()).toBe(original);
+  });
+
   it("does not create a buffer edit when an existing literal is unchanged", () => {
     openAt("#123456", [0, 3]);
     const change = jasmine.createSpy("change");

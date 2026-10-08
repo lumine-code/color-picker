@@ -16,6 +16,47 @@ function expectColor(actual, expected, precision = 5) {
 }
 
 describe("color parsing and serialization", () => {
+  it("rejects non-finite hue numbers in every supported angle unit", () => {
+    const overflow = "9".repeat(400);
+    for (const unit of ["", "deg", "grad", "rad", "turn"]) {
+      for (const sign of ["", "-"]) {
+        for (const name of ["hsl", "hsla", "hsv", "hsva"]) {
+          expect(parseColor(`${name}(${sign}${overflow}${unit} 100% 50% / .5)`))
+            .withContext(`${name}/${sign}/${unit}`)
+            .toBeNull();
+        }
+      }
+    }
+  });
+
+  it("rejects finite numbers whose angle conversion overflows", () => {
+    const finite = "1" + "0".repeat(307);
+    expect(Number.isFinite(Number(finite))).toBe(true);
+    for (const unit of ["rad", "turn"]) {
+      expect(parseColor(`hsl(${finite}${unit}, 100%, 50%)`))
+        .withContext(unit)
+        .toBeNull();
+      expect(parseColor(`hsv(-${finite}${unit}, 100%, 50%)`))
+        .withContext(unit)
+        .toBeNull();
+    }
+  });
+
+  it("preserves finite angle wrapping, units and serialization", () => {
+    for (const hue of [
+      "-240",
+      "480deg",
+      `${-800 / 3}grad`,
+      `${(8 * Math.PI) / 3}rad`,
+      "-1.6666666666666667turn",
+    ]) {
+      const parsed = parseColor(`hsl(${hue}, 100%, 50%)`);
+      expectColor(parsed, { r: 0, g: 255, b: 0, a: 1 });
+      expect(parsed.hsv.h).toBeCloseTo(120, 5);
+      expect(serializeColor(parsed.color, "hsl")).toBe("hsl(120, 100%, 50%)");
+    }
+  });
+
   it("parses every supported hexadecimal length", () => {
     expectColor(parseColor("#abc"), { r: 170, g: 187, b: 204, a: 1 });
     expectColor(parseColor("#abcd"), { r: 170, g: 187, b: 204, a: 221 / 255 });
