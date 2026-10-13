@@ -14,6 +14,8 @@ Place the cursor inside a color, select a color expression, or choose an inserti
 - **Safe editing**: preview changes and update the buffer only after confirmation.
 - **Insertion**: insert the last chosen color when no supported literal is under the cursor.
 
+![Choose and insert a color from the color picker.](.github/demo.png)
+
 ## Installation
 
 To install `color-picker` search for it in the Install pane of the Lumine settings, or run the command `lumine --install lumine-code/color-picker`.

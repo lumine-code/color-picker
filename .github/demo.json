@@ -1,0 +1,16 @@
+{
+  "title": "color-picker",
+  "description": "Choose and insert a color from the color picker.",
+  "recordedOn": "2026-10-13",
+  "sourceRevision": "91724ef798344fbc8cdbe89efcb9af447702f1d3",
+  "mode": "normal",
+  "fontSettings": "default",
+  "images": [
+    {
+      "file": "demo.png",
+      "label": "Choose and insert a color from the color picker.",
+      "width": 1100,
+      "height": 720
+    }
+  ]
+}
