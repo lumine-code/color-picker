@@ -13,6 +13,20 @@
           ]
         }
       ]
+    },
+    {
+      "label": "View",
+      "submenu": [
+        {
+          "label": "Toggle View",
+          "submenu": [
+            {
+              "label": "Color Picker",
+              "command": "color-picker:toggle-focus"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
