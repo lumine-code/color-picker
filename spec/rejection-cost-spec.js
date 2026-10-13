@@ -40,11 +40,11 @@ describe("Color Picker malformed functional values", () => {
     expect(result.stdout).toContain("completed production parser controls");
   });
 
-  it("keeps malformed picker input invalid and accepts padded RGB through actual Apply and undo", () => {
+  it("keeps malformed picker input invalid and accepts padded RGB through actual Apply and undo", async () => {
     const original = "color: #123456;";
     editor.setText(original);
     editor.setCursorBufferPosition([0, 10]);
-    lumine.commands.dispatch(lumine.views.getView(editor), "color-picker:toggle-focus");
+    await lumine.commands.dispatch(lumine.views.getView(editor), "color-picker:toggle-focus");
     const session = main.activeSession;
     const input = session.picker.element.querySelector(".color-picker-text");
     const apply = session.picker.element.querySelector(".btn-primary");

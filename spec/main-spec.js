@@ -36,18 +36,18 @@ describe("color-picker", () => {
   });
 
   function dispatch(target = editorElement) {
-    lumine.commands.dispatch(target, "color-picker:toggle-focus");
+    return lumine.commands.dispatch(target, "color-picker:toggle-focus");
   }
 
-  function openAt(text, position) {
+  async function openAt(text, position) {
     editor.setText(text);
     editor.setCursorBufferPosition(position);
-    dispatch();
+    await dispatch();
     return pickerElement(editor);
   }
 
-  it("opens an accessible boundary overlay without changing the buffer", () => {
-    const picker = openAt("color: rgba(10, 20, 30, .5);", [0, 20]);
+  it("opens an accessible boundary overlay without changing the buffer", async () => {
+    const picker = await openAt("color: rgba(10, 20, 30, .5);", [0, 20]);
     expect(picker).not.toBeNull();
     expect(picker.getAttribute("role")).toBe("dialog");
     expect(picker.hasAttribute("data-context-menu-boundary")).toBe(true);
@@ -56,15 +56,15 @@ describe("color-picker", () => {
     expect(editor.getText()).toBe("color: rgba(10, 20, 30, .5);");
   });
 
-  it("uses the detected format instead of the insertion preference", () => {
+  it("uses the detected format instead of the insertion preference", async () => {
     lumine.config.set("color-picker.preferredFormat", "vec");
-    const picker = openAt("color: hsl(120, 100%, 50%);", [0, 18]);
+    const picker = await openAt("color: hsl(120, 100%, 50%);", [0, 18]);
     expect(mainModule.activeSession.picker.formatSelect.value).toBe("hsl");
     expect(picker.querySelector(".color-picker-text").value).toBe("hsl(120, 100%, 50%)");
   });
 
-  it("retains an achromatic HSL hue when saturation is increased", () => {
-    const picker = openAt("hsl(120, 0%, 50%)", [0, 8]);
+  it("retains an achromatic HSL hue when saturation is increased", async () => {
+    const picker = await openAt("hsl(120, 0%, 50%)", [0, 8]);
     expect(picker.querySelector(".color-picker-hue input").value).toBe("120");
     expect(picker.querySelector(".color-picker-text").value).toBe("hsl(120, 0%, 50%)");
     picker
@@ -76,8 +76,8 @@ describe("color-picker", () => {
     expect(picker.querySelector(".color-picker-hue input").value).toBe("120");
   });
 
-  it("retains an HSV hue and saturation while value is zero", () => {
-    const picker = openAt("hsv(240, 100%, 0%)", [0, 8]);
+  it("retains an HSV hue and saturation while value is zero", async () => {
+    const picker = await openAt("hsv(240, 100%, 0%)", [0, 8]);
     expect(picker.querySelector(".color-picker-hue input").value).toBe("240");
     expect(picker.querySelector(".color-picker-text").value).toBe("hsv(240, 100%, 0%)");
     picker
@@ -89,30 +89,30 @@ describe("color-picker", () => {
     expect(picker.querySelector(".color-picker-hue input").value).toBe("240");
   });
 
-  it("invoking toggle-focus again cancels without applying", () => {
+  it("invoking toggle-focus again cancels without applying", async () => {
     const original = "color: #123456;";
-    const picker = openAt(original, [0, 10]);
+    const picker = await openAt(original, [0, 10]);
     const input = picker.querySelector(".color-picker-text");
     input.value = "#abcdef";
     input.dispatchEvent(new Event("input", { bubbles: true }));
-    dispatch();
+    await dispatch();
     expect(overlayDecorations(editor).length).toBe(0);
     expect(editor.getText()).toBe(original);
   });
 
-  it("Escape and an outside click cancel the session", () => {
-    let picker = openAt("#123456", [0, 3]);
+  it("Escape and an outside click cancel the session", async () => {
+    let picker = await openAt("#123456", [0, 3]);
     picker.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
     expect(overlayDecorations(editor).length).toBe(0);
-    picker = openAt("#123456", [0, 3]);
+    picker = await openAt("#123456", [0, 3]);
     expect(picker).not.toBeNull();
     document.body.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
     expect(overlayDecorations(editor).length).toBe(0);
     expect(editor.getText()).toBe("#123456");
   });
 
-  it("applies an edited value and places the cursor after it", () => {
-    const picker = openAt("border: #123456 solid;", [0, 10]);
+  it("applies an edited value and places the cursor after it", async () => {
+    const picker = await openAt("border: #123456 solid;", [0, 10]);
     const input = picker.querySelector(".color-picker-text");
     input.value = "rgba(1, 2, 3, .5)";
     input.dispatchEvent(new Event("input", { bubbles: true }));
@@ -122,9 +122,9 @@ describe("color-picker", () => {
     expect(overlayDecorations(editor).length).toBe(0);
   });
 
-  it("keeps overflow hue input invalid and leaves the editor untouched until corrected", () => {
+  it("keeps overflow hue input invalid and leaves the editor untouched until corrected", async () => {
     const original = "color: #123456;";
-    const picker = openAt(original, [0, 10]);
+    const picker = await openAt(original, [0, 10]);
     const input = picker.querySelector(".color-picker-text");
     const apply = picker.querySelector(".btn-primary");
     input.value = `hsl(${"9".repeat(400)}, 100%, 50%)`;
@@ -143,18 +143,18 @@ describe("color-picker", () => {
     expect(editor.getText()).toBe(original);
   });
 
-  it("opens insertion mode at an overflow literal without selecting it as a valid color", () => {
+  it("opens insertion mode at an overflow literal without selecting it as a valid color", async () => {
     const original = `color: hsl(${"9".repeat(400)}, 100%, 50%);`;
-    const picker = openAt(original, [0, 12]);
+    const picker = await openAt(original, [0, 12]);
     expect(mainModule.activeSession.insertion).toBe(true);
     expect(mainModule.activeSession.originalText).toBe("");
     expect(picker.querySelector(".color-picker-text").value).toBe("#ff0000");
-    dispatch();
+    await dispatch();
     expect(editor.getText()).toBe(original);
   });
 
-  it("does not create a buffer edit when an existing literal is unchanged", () => {
-    openAt("#123456", [0, 3]);
+  it("does not create a buffer edit when an existing literal is unchanged", async () => {
+    await openAt("#123456", [0, 3]);
     const change = jasmine.createSpy("change");
     const subscription = editor.getBuffer().onDidChangeText(change);
     pickerElement(editor).querySelector(".btn-primary").click();
@@ -163,8 +163,8 @@ describe("color-picker", () => {
     expect(editor.getText()).toBe("#123456");
   });
 
-  it("inserts the default color and remembers the last confirmed color", () => {
-    let picker = openAt("value: ", [0, 7]);
+  it("inserts the default color and remembers the last confirmed color", async () => {
+    let picker = await openAt("value: ", [0, 7]);
     expect(picker.querySelector(".color-picker-text").value).toBe("#ff0000");
     const input = picker.querySelector(".color-picker-text");
     input.value = "rgb(0, 255, 0)";
@@ -174,53 +174,53 @@ describe("color-picker", () => {
 
     editor.setText("next: ");
     editor.setCursorBufferPosition([0, 6]);
-    dispatch();
+    await dispatch();
     picker = pickerElement(editor);
     expect(picker.querySelector(".color-picker-text").value).toBe("#00ff00");
   });
 
-  it("uses the last cursor when several cursors exist", () => {
+  it("uses the last cursor when several cursors exist", async () => {
     editor.setText("#f00 and #00f");
     editor.setCursorBufferPosition([0, 1]);
     editor.addCursorAtBufferPosition([0, 11]);
-    dispatch();
+    await dispatch();
     expect(mainModule.activeSession.originalText).toBe("#00f");
   });
 
-  it("prefers a valid nonempty selection", () => {
+  it("prefers a valid nonempty selection", async () => {
     editor.setText("red then hsl(240, 100%, 50%)");
     editor.setSelectedBufferRange([
       [0, 9],
       [0, 30],
     ]);
-    dispatch();
+    await dispatch();
     expect(mainModule.activeSession.originalText).toBe("hsl(240, 100%, 50%)");
     expect(mainModule.activeSession.picker.formatSelect.value).toBe("hsl");
   });
 
-  it("closes when the editor buffer changes externally", () => {
-    openAt("#123456", [0, 3]);
+  it("closes when the editor buffer changes externally", async () => {
+    await openAt("#123456", [0, 3]);
     editor.insertText("x");
     expect(overlayDecorations(editor).length).toBe(0);
   });
 
-  it("does nothing when dispatched from a mini editor", () => {
+  it("does nothing when dispatched from a mini editor", async () => {
     const miniEditor = lumine.workspace.buildTextEditor({ mini: true });
     const miniElement = lumine.views.getView(miniEditor);
     lumine.workspace.getElement().appendChild(miniElement);
     miniElement.focus();
-    dispatch(miniElement);
+    await dispatch(miniElement);
     expect(mainModule.activeSession).toBeNull();
     miniEditor.destroy();
     miniElement.remove();
   });
 
-  it("honors output settings for a new color", () => {
+  it("honors output settings for a new color", async () => {
     lumine.config.set("color-picker.preferredFormat", "hex");
     lumine.config.set("color-picker.uppercaseHex", true);
     lumine.config.set("color-picker.abbreviateValues", true);
     lumine.config.set("color-picker.alwaysIncludeAlpha", true);
-    const picker = openAt("", [0, 0]);
+    const picker = await openAt("", [0, 0]);
     expect(picker.querySelector(".color-picker-text").value).toBe("#F00F");
   });
 });
