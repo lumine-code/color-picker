@@ -93,6 +93,53 @@ describe("color-picker pending native imports", () => {
     expect(main.activeSession.originalText).toBe("#123456");
   });
 
+  it("does not open a background overlay after switching the active editor without a pointer event", async () => {
+    const pane = lumine.workspace.paneForItem(editor);
+    const second = lumine.workspace.buildTextEditor();
+    pane.addItem(second);
+    const release = await holdImport();
+    const pending = open();
+    pane.activateItem(second);
+    release();
+    await pending;
+    expect(main.sessions.size).toBe(0);
+    expect(main.pendingOpens.size).toBe(0);
+    expect(pane.getActiveItem()).toBe(second);
+    second.destroy();
+  });
+
+  it("does not take keyboard focus back from another control after its import", async () => {
+    const input = document.createElement("input");
+    document.body.append(input);
+    try {
+      const release = await holdImport();
+      const pending = open();
+      input.focus();
+      release();
+      await pending;
+      expect(main.sessions.size).toBe(0);
+      expect(document.activeElement).toBe(input);
+    } finally {
+      input.remove();
+    }
+  });
+
+  it("keeps a pending opening independent of active editor changes in another window", async () => {
+    const extra = await lumine.workspace.openEditorWindow({ show: false });
+    const other = lumine.workspace.buildTextEditor();
+    try {
+      const release = await holdImport();
+      const pending = open();
+      extra.getEditorContainer().getActivePane().activateItem(other, { activatePane: true });
+      release();
+      await pending;
+      expect(main.sessions.get(lumine.workspace.getMainWindow())?.editor).toBe(editor);
+    } finally {
+      other.destroy();
+      await lumine.workspace.discardEditorWindows();
+    }
+  });
+
   it("retries a failed native import without leaving a pending overlay", async () => {
     spyOn(main, "importRuntime").and.rejectWith(new Error("Held picker import failed"));
     await expectAsync(main.open(editor, [0, 3])).toBeRejectedWithError("Held picker import failed");
