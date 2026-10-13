@@ -22,7 +22,9 @@
           "submenu": [
             {
               "label": "Color Picker",
-              "command": "color-picker:toggle-focus"
+              "command": "color-picker:toggle-focus",
+              "group": "panels",
+              "order": 10
             }
           ]
         }
