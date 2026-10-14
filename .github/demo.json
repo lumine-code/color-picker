@@ -1,16 +1,61 @@
 {
   "title": "color-picker",
   "description": "Choose and insert a color from the color picker.",
-  "recordedOn": "2026-10-13",
-  "sourceRevision": "91724ef798344fbc8cdbe89efcb9af447702f1d3",
+  "recordedOn": "2026-10-14",
+  "sourceRevision": "1e76f3c750073409ef3e42ead4b20be2ca8c8d8d",
+  "themeSourceRevision": "7fbd047a87ecf1367c896b19ff270cdc28d319f7",
   "mode": "normal",
   "fontSettings": "default",
+  "scenario": "demo.js",
+  "recipeHash": "492d59bb4bb2068528bf4c3550ed530843c0386c72b4bcdaefb883a037ffdbf9",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "electron": "44.7.0",
+    "chrome": "152.0.7977.130",
+    "devicePixelRatio": 1,
+    "locale": "en-GB",
+    "fontFamily": "Fira Code, Menlo, DejaVu Sans Mono, Consolas, monospace",
+    "fontSize": 14,
+    "themes": ["one-day-syntax", "one-day-ui"]
+  },
+  "viewport": { "width": 1100, "height": 720 },
+  "cornerRadius": 10,
+  "sources": {
+    "editor": {
+      "revision": "d0b1751fffac65f10a405545e5f01cf7ad05c0bb",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "package": {
+      "revision": "1e76f3c750073409ef3e42ead4b20be2ca8c8d8d",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "color-picker": {
+      "revision": "1e76f3c750073409ef3e42ead4b20be2ca8c8d8d",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "one-theme": {
+      "revision": "7fbd047a87ecf1367c896b19ff270cdc28d319f7",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  },
+  "fixtures": [
+    {
+      "file": "palette.css",
+      "sha256": "50f3ad326f30e10b7d0c83e404a717f1e2a082ce9cd61b3d7ae8ff8bc427e6ec"
+    }
+  ],
   "images": [
     {
       "file": "demo.png",
       "label": "Choose and insert a color from the color picker.",
       "width": 1100,
-      "height": 720
+      "height": 720,
+      "sha256": "3dc5a3088f93df1a3035a20e32231f14ac2581cb9dbb3ab79354aa5b578585dd"
     }
   ]
 }
