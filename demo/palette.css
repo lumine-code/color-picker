@@ -1,0 +1,28 @@
+:root {
+  --accent: #cf9723;
+  --surface: #f2f1ee;
+}
+
+/* A responsive project workspace. */
+.workspace {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 24px;
+  padding: 32px;
+  background: var(--surface);
+}
+
+.workspace a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.workspace a:hover {
+  text-decoration: underline;
+}
+
+@media (width < 720px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+}
