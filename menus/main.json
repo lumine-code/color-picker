@@ -15,18 +15,13 @@
       ]
     },
     {
-      "label": "View",
+      "label": "Edit",
       "submenu": [
         {
-          "label": "Toggle View",
-          "submenu": [
-            {
-              "label": "Color Picker",
-              "command": "color-picker:toggle-focus",
-              "group": "panels",
-              "order": 10
-            }
-          ]
+          "label": "Pick Color…",
+          "command": "color-picker:toggle-focus",
+          "group": "insert",
+          "order": 30
         }
       ]
     }
