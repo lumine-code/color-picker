@@ -100,6 +100,16 @@ describe("color-picker", () => {
     expect(editor.getText()).toBe(original);
   });
 
+  it("allows its own input to cancel once through the owning editor scope", async () => {
+    const picker = await openAt("#123456", [0, 3]);
+    const input = picker.querySelector(".color-picker-text");
+    const toggle = spyOn(mainModule, "toggleFocus").and.callThrough();
+    expect(lumine.commands.canDispatch(input, "color-picker:toggle-focus")).toBe(true);
+    await dispatch(input);
+    expect(toggle).toHaveBeenCalledTimes(1);
+    expect(overlayDecorations(editor).length).toBe(0);
+  });
+
   it("Escape and an outside click cancel the session", async () => {
     let picker = await openAt("#123456", [0, 3]);
     picker.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));

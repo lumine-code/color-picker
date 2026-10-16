@@ -22,7 +22,7 @@ To install `color-picker` search for it in the Install pane of the Lumine settin
 
 ## Commands
 
-Commands available in `lumine-workspace`:
+Commands available in `lumine-text-editor:not([mini]):not([readonly])`:
 
 - `color-picker:toggle-focus`: open the color picker, or close it without applying changes.
 
