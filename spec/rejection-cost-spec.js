@@ -1,5 +1,5 @@
-const { spawnSync } = require("node:child_process");
 const path = require("node:path");
+const runParserChild = require("./helpers/parser-child");
 
 describe("Color Picker malformed functional values", () => {
   let main, editor;
@@ -17,7 +17,7 @@ describe("Color Picker malformed functional values", () => {
     editor.destroy();
   });
 
-  it("rejects an unfinished whitespace-heavy function within a bounded child", () => {
+  it("rejects an unfinished whitespace-heavy function within a bounded child", async () => {
     const script = `
       const {parseColor}=require(process.argv[1]);
       if(parseColor("rgb("+" ".repeat(16000)+"!")!==null)throw Error("Expected invalid color");
@@ -25,20 +25,15 @@ describe("Color Picker malformed functional values", () => {
       if(!parsed||parsed.color.r!==1||parsed.color.g!==2||parsed.color.b!==3)throw Error("Expected padded RGB");
       console.log("completed production parser controls");
     `;
-    const result = spawnSync(
+    const result = await runParserChild(
       process.execPath,
-      ["-e", script, path.resolve(__dirname, "../lib/color.js")],
-      {
-        env: { ...process.env, ELECTRON_RUN_AS_NODE: "1" },
-        encoding: "utf8",
-        timeout: 3000,
-        windowsHide: true,
-      },
+      script,
+      path.resolve(__dirname, "../lib/color.js"),
     );
     expect(result.error).withContext(result.error?.message).toBeUndefined();
     expect(result.status).withContext(result.stderr).toBe(0);
     expect(result.stdout).toContain("completed production parser controls");
-  });
+  }, 15000);
 
   it("keeps malformed picker input invalid and accepts padded RGB through actual Apply and undo", async () => {
     const original = "color: #123456;";
@@ -64,7 +59,7 @@ describe("Color Picker malformed functional values", () => {
     expect(editor.getText()).toBe(original);
   });
 
-  it("parses a whitespace-heavy valid function without repeatedly searching for a missing slash", () => {
+  it("parses a whitespace-heavy valid function without repeatedly searching for a missing slash", async () => {
     const script = `
       const {parseColor}=require(process.argv[1]);
       const parsed=parseColor("rgb("+" ".repeat(100000)+"1, 2, 3)");
@@ -75,21 +70,21 @@ describe("Color Picker malformed functional values", () => {
       ["plain Node", "node"],
       ["Electron Node", process.execPath],
     ]) {
-      const result = spawnSync(binary, ["-e", script, path.resolve(__dirname, "../lib/color.js")], {
-        env: { ...process.env, ELECTRON_RUN_AS_NODE: "1" },
-        encoding: "utf8",
-        timeout: 3000,
-        windowsHide: true,
-      });
+      const result = await runParserChild(
+        binary,
+        script,
+        path.resolve(__dirname, "../lib/color.js"),
+      );
       console.info(
         "Color parser runtime control",
         label,
         result.stdout.trim(),
         result.error?.code ?? "completed",
+        { phase: result.phase, startupMs: result.startupMs, executionMs: result.executionMs },
       );
       expect(result.error).withContext(`${label}: ${result.error?.message}`).toBeUndefined();
       expect(result.status).withContext(`${label}: ${result.stderr}`).toBe(0);
       expect(result.stdout).withContext(label).toContain("completed padded production parser");
     }
-  });
+  }, 30000);
 });
