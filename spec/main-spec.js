@@ -13,6 +13,11 @@ function pickerElement(editor) {
 }
 
 describe("color-picker", () => {
+  // Processing fixtures use a real grammar; None deliberately disables this package.
+  beforeEach(async () => {
+    await lumine.packages.activatePackage("language-text");
+  });
+
   let editor;
   let editorElement;
   let mainModule;

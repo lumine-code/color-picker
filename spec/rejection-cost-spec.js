@@ -2,6 +2,11 @@ const path = require("node:path");
 const runParserChild = require("./helpers/parser-child");
 
 describe("Color Picker malformed functional values", () => {
+  // Processing fixtures use a real grammar; None deliberately disables this package.
+  beforeEach(async () => {
+    await lumine.packages.activatePackage("language-text");
+  });
+
   let main, editor;
   beforeEach(async () => {
     jasmine.useRealClock();

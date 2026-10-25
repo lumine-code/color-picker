@@ -1,4 +1,9 @@
 describe("color-picker menu command scopes", () => {
+  // Processing fixtures use a real grammar; None deliberately disables this package.
+  beforeEach(async () => {
+    await lumine.packages.activatePackage("language-text");
+  });
+
   const commands = ["toggle-focus"].map((name) => `color-picker:${name}`);
   let editor, mini, button;
 
