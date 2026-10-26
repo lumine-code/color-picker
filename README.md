@@ -30,6 +30,8 @@ Commands available in `lumine-text-editor:not([mini]):not([readonly])`:
 
 The picker reads CSS named colors, three-, four-, six-, and eight-digit hexadecimal notation, RGB(A), HSL(A), HSV(A), and `vec3`/`vec4`. It can write HEX, RGB, HSL, HSV, or VEC without resolving variables or compound expressions.
 
+Color expressions are limited to 4096 UTF-16 code units. Longer selections are not read, and cursor lookup reads only a bounded neighborhood while requiring a complete expression. If no supported expression fits, the picker offers insertion at the cursor without replacing the selection.
+
 ## Customization
 
 The picker uses the active theme's variables; to make it wider, add this to your `styles.css`:
