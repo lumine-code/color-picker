@@ -4,11 +4,12 @@ lumine-overlay.color-picker-overlay {
 
 .color-picker {
   box-sizing: border-box;
-  width: 330px;
-  min-width: 330px;
-  padding: 10px;
+  width: min(330px, calc(100vw - var(--ui-spacing) * 2));
+  min-width: 0;
+  padding: var(--ui-spacing);
   color: var(--text-color);
   border: 1px solid var(--overlay-border-color);
+  border-radius: var(--ui-border-radius);
   background: var(--overlay-background-color);
 }
 
