@@ -1,9 +1,9 @@
 {
   "title": "color-picker",
   "description": "Choose and insert a color from the color picker.",
-  "recordedOn": "2026-10-14",
-  "sourceRevision": "1e76f3c750073409ef3e42ead4b20be2ca8c8d8d",
-  "themeSourceRevision": "7fbd047a87ecf1367c896b19ff270cdc28d319f7",
+  "recordedOn": "2026-10-30",
+  "sourceRevision": "70d03b3a6685cd091aa46c9cb82f883c0a493d7b",
+  "themeSourceRevision": "484213c82bbf567e2cb7cd5f85c5d73965346809",
   "mode": "normal",
   "fontSettings": "default",
   "scenario": "demo.js",
@@ -11,8 +11,8 @@
   "environment": {
     "platform": "win32",
     "arch": "x64",
-    "electron": "44.7.0",
-    "chrome": "152.0.7977.130",
+    "electron": "45.0.0",
+    "chrome": "156.0.8078.48",
     "devicePixelRatio": 1,
     "locale": "en-GB",
     "fontFamily": "Fira Code, Menlo, DejaVu Sans Mono, Consolas, monospace",
@@ -21,24 +21,25 @@
   },
   "viewport": { "width": 1100, "height": 720 },
   "cornerRadius": 10,
+  "privacy": { "version": 1, "location": "neutral", "textChecked": true },
   "sources": {
     "editor": {
-      "revision": "d0b1751fffac65f10a405545e5f01cf7ad05c0bb",
+      "revision": "f6fd84b6cf089f806bf8242332a1a3a740d1bddc",
       "dirty": false,
       "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
     },
     "package": {
-      "revision": "1e76f3c750073409ef3e42ead4b20be2ca8c8d8d",
+      "revision": "70d03b3a6685cd091aa46c9cb82f883c0a493d7b",
       "dirty": false,
       "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
     },
     "color-picker": {
-      "revision": "1e76f3c750073409ef3e42ead4b20be2ca8c8d8d",
+      "revision": "70d03b3a6685cd091aa46c9cb82f883c0a493d7b",
       "dirty": false,
       "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
     },
     "one-theme": {
-      "revision": "7fbd047a87ecf1367c896b19ff270cdc28d319f7",
+      "revision": "484213c82bbf567e2cb7cd5f85c5d73965346809",
       "dirty": false,
       "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
     }
@@ -55,7 +56,7 @@
       "label": "Choose and insert a color from the color picker.",
       "width": 1100,
       "height": 720,
-      "sha256": "3dc5a3088f93df1a3035a20e32231f14ac2581cb9dbb3ab79354aa5b578585dd"
+      "sha256": "69a099970f4659b1f01500169ae12bbe7c2f5ac81a8cd988dcb218401614c938"
     }
   ]
 }
