@@ -35,4 +35,25 @@ describe("color picker in editor windows", () => {
     await workspace.detachItem(first, { show: false });
     expect(local.isOpen()).toBe(false);
   });
+
+  it("owns its format popup in the same detached document as its picker", async () => {
+    const extra = await lumine.workspace.openEditorWindow({ show: false });
+    const editor = lumine.workspace.buildTextEditor();
+    editor.setText("#00ff00");
+    extra.getEditorContainer().getActivePane().activateItem(editor, { activatePane: true });
+    await lumine.commands.dispatch(editor.getElement(), "color-picker:toggle-focus");
+    const main = lumine.packages.getActivePackage("color-picker").mainModule;
+    const session = main.sessions.get(extra);
+    const select = session.picker.formatSelect;
+    await select.open();
+    expect(select.popup.element.ownerDocument).toBe(extra.getDocument());
+    const option = [...select.listElement.querySelectorAll('[role="option"]')].find(
+      (element) => element.textContent === "HSL",
+    );
+    const nativeWindow = extra.getDOMWindow();
+    option.dispatchEvent(new nativeWindow.MouseEvent("mousedown", { bubbles: true }));
+    option.click();
+    expect(session.isOpen()).toBeTrue();
+    expect(session.picker.format).toBe("hsl");
+  });
 });

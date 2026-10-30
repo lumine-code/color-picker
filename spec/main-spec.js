@@ -133,6 +133,52 @@ describe("color-picker", () => {
     expect(editor.getText()).toBe("#123456");
   });
 
+  it("keeps its owned format popup open through pointer selection", async () => {
+    await openAt("#123456", [0, 3]);
+    const session = mainModule.activeSession;
+    const select = session.picker.formatSelect;
+    await select.open();
+    const option = [...select.listElement.querySelectorAll('[role="option"]')].find(
+      (element) => element.textContent === "HSL",
+    );
+    option.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+    option.click();
+    expect(session.isOpen()).toBeTrue();
+    expect(session.picker.format).toBe("hsl");
+    expect(editor.getText()).toBe("#123456");
+  });
+
+  it("cancels when focus leaves its owned format popup without committing the draft", async () => {
+    await openAt("#123456", [0, 3]);
+    const session = mainModule.activeSession;
+    const outside = document.createElement("button");
+    jasmine.attachToDOM(outside);
+    spyOn(document, "hasFocus").and.returnValue(true);
+    await session.picker.formatSelect.open();
+    await Promise.resolve();
+    expect(session.isOpen()).toBeTrue();
+    outside.focus();
+    await Promise.resolve();
+    expect(session.isOpen()).toBeFalse();
+    expect(editor.getText()).toBe("#123456");
+  });
+
+  it("preserves its draft when its document loses application focus", async () => {
+    await openAt("#123456", [0, 3]);
+    const session = mainModule.activeSession;
+    session.picker.textEditor.setText("#abcdef");
+    const outside = document.createElement("button");
+    jasmine.attachToDOM(outside);
+    session.picker.focus();
+    spyOn(document, "hasFocus").and.returnValue(false);
+    outside.focus();
+    window.dispatchEvent(new Event("blur"));
+    await Promise.resolve();
+    expect(session.isOpen()).toBeTrue();
+    expect(session.picker.textEditor.getText()).toBe("#abcdef");
+    expect(editor.getText()).toBe("#123456");
+  });
+
   it("applies an edited value and places the cursor after it", async () => {
     const picker = await openAt("border: #123456 solid;", [0, 10]);
     const input = picker.querySelector(".color-picker-text");
