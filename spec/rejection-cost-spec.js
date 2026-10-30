@@ -48,14 +48,12 @@ describe("Color Picker malformed functional values", () => {
     const session = main.activeSession;
     const input = session.picker.element.querySelector(".color-picker-text");
     const apply = session.picker.element.querySelector(".btn-primary");
-    input.value = "rgb(" + " ".repeat(512) + "!";
-    input.dispatchEvent(new Event("input", { bubbles: true }));
+    input.getModel().setText("rgb(" + " ".repeat(512) + "!");
     expect(input.getAttribute("aria-invalid")).toBe("true");
     expect(apply.disabled).toBe(true);
     apply.click();
     expect(editor.getText()).toBe(original);
-    input.value = "rgb(" + " ".repeat(512) + "1, 2, 3" + " ".repeat(512) + ")";
-    input.dispatchEvent(new Event("input", { bubbles: true }));
+    input.getModel().setText("rgb(" + " ".repeat(512) + "1, 2, 3" + " ".repeat(512) + ")");
     expect(apply.disabled).toBe(false);
     apply.click();
     expect(editor.getText()).toBe("color: rgb(1, 2, 3);");
