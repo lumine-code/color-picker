@@ -1,4 +1,5 @@
 const path = require("path");
+const { ipcRenderer } = require("electron");
 
 const packageRoot = path.join(__dirname, "..");
 
@@ -148,9 +149,64 @@ describe("color-picker", () => {
     expect(editor.getText()).toBe("#123456");
   });
 
+  it("preserves Format activation while browser focus briefly passes through the body", async () => {
+    await openAt("#123456", [0, 3]);
+    const session = mainModule.activeSession;
+    const select = session.picker.formatSelect;
+    spyOn(document, "hasFocus").and.returnValue(true);
+    session.picker.focus();
+    const active = spyOnProperty(document, "activeElement", "get").and.returnValue(document.body);
+    session.picker.textInput.dispatchEvent(new FocusEvent("focusout", { bubbles: true }));
+    await Promise.resolve();
+    expect(session.isOpen()).toBeTrue();
+    active.and.returnValue(select.element);
+    select.element.click();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(session.isOpen()).toBeTrue();
+    expect(select.popup).not.toBeNull();
+  });
+
+  jasmine.itWithDocumentFocus(
+    "opens Format through a real mouse press without closing its picker",
+    async () => {
+      await openAt("#123456", [0, 3]);
+      const session = mainModule.activeSession;
+      const select = session.picker.formatSelect;
+      // Keep the real picker visible independently of the spec editor's marker layout.
+      session.picker.element.style.cssText = "position:fixed;left:40px;top:80px;z-index:100000";
+      document.body.append(session.picker.element);
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const rect = select.element.getBoundingClientRect();
+      const hit = document.elementFromPoint(
+        Math.round(rect.left + rect.width / 2),
+        Math.round(rect.top + rect.height / 2),
+      );
+      expect(hit?.closest(".select-box"))
+        .withContext(JSON.stringify(rect.toJSON()))
+        .toBe(select.element);
+      const pressed = jasmine.createSpy("native Format press");
+      select.element.addEventListener("mousedown", pressed);
+      for (const type of ["mouseMove", "mouseDown", "mouseUp"]) {
+        await ipcRenderer.invoke("lumine:window", "sendInputEvent", {
+          type,
+          x: Math.round(rect.left + rect.width / 2),
+          y: Math.round(rect.top + rect.height / 2),
+          button: "left",
+          clickCount: 1,
+        });
+      }
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      expect(pressed).toHaveBeenCalledTimes(1);
+      expect(session.isOpen()).toBeTrue();
+      expect(select.popup).not.toBeNull();
+      expect(editor.getText()).toBe("#123456");
+    },
+  );
+
   it("cancels when focus leaves its owned format popup without committing the draft", async () => {
     await openAt("#123456", [0, 3]);
     const session = mainModule.activeSession;
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     const outside = document.createElement("button");
     jasmine.attachToDOM(outside);
     spyOn(document, "hasFocus").and.returnValue(true);
@@ -158,7 +214,7 @@ describe("color-picker", () => {
     await Promise.resolve();
     expect(session.isOpen()).toBeTrue();
     outside.focus();
-    await Promise.resolve();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
     expect(session.isOpen()).toBeFalse();
     expect(editor.getText()).toBe("#123456");
   });
@@ -173,7 +229,7 @@ describe("color-picker", () => {
     spyOn(document, "hasFocus").and.returnValue(false);
     outside.focus();
     window.dispatchEvent(new Event("blur"));
-    await Promise.resolve();
+    await new Promise((resolve) => requestAnimationFrame(resolve));
     expect(session.isOpen()).toBeTrue();
     expect(session.picker.textEditor.getText()).toBe("#abcdef");
     expect(editor.getText()).toBe("#123456");
